@@ -107,7 +107,7 @@ enum Commands {
 }
 //
 
-async fn serve(path: &'static str, port: u16) -> std::io::Result<()> {
+async fn serve(path: String, port: u16) -> std::io::Result<()> {
     let current_dir = env::current_dir().unwrap();
 
     // let ps = path;
@@ -126,7 +126,7 @@ async fn serve(path: &'static str, port: u16) -> std::io::Result<()> {
     // .await
 
     HttpServer::new(move || {
-        App::new().service(fs::Files::new("/", Path::new(path)).index_file("index.html"))
+        App::new().service(fs::Files::new("/", Path::new(&path)).index_file("index.html"))
     })
     .bind(("127.0.0.1", port))?
     .run()
@@ -147,7 +147,8 @@ async fn main() {
             println!("Command for path is Serve: {:?}", port);
             let new_path = format!("{}/{}", current_dir.to_str().unwrap(), path);
             println!("Command for new path is Serve: {:?}", new_path.as_str());
-            let _ = serve(&new_path, port).await;
+            // let current_path = String::from(value);
+            let _ = serve(new_path, port).await;
         }
     }
 }
